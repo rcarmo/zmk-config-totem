@@ -11,33 +11,17 @@
 // ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
 
 #include <behaviors.dtsi>
-#include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/bt.h>
-#include <dt-bindings/zmk/outputs.h>
-#include <dt-bindings/zmk/ext_power.h>
+#include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/pointing.h>
 
 #define Base            0
 #define Sym             1
 #define Nav             2
 #define Adjust          3
 
-&sk {
-    release-after-ms = <1000>;
-    quick-release;
-};
-
-&caps_word {
-    continue-list = <UNDERSCORE MINUS BSPC>;
-};
-
 / {
-    conditional_layers {
-        compatible = "zmk,conditional-layers";
-        tri_layer {
-            if-layers = <1 2>;
-            then-layer = <3>;
-        };
-    };
+    conditional_layers { compatible = "zmk,conditional-layers"; };
 
     //               0   1   2   3   4                   5   6   7   8   9
     //               10  11  12  13  14                  15  16  17  18  19
@@ -54,52 +38,87 @@
         Base {
             label = "Base";
             bindings = <
-                     &kp Q  &kp W  &kp E     &kp R    &kp T                      &kp Y      &kp U    &kp I      &kp O    &kp P
-                     &kp A  &kp S  &kp D     &kp F    &kp G                      &kp H      &kp J    &kp K      &kp L    &kp SEMI
-            &kp ESC  &kp Z  &kp X  &kp C     &kp V    &kp B                      &kp N      &kp M    &kp COMMA  &kp DOT  &kp SLASH  &kp SQT 
-                                   &kp BSPC  &mo Sym  &kp LSHFT                  &kp SPACE  &mo Nav  &kp RET
+       &kp Q  &kp W  &kp E  &kp R           &kp T    &kp Y  &kp U      &kp I      &kp O    &kp P
+       &kp A  &kp S  &kp D  &kp F           &kp G    &kp H  &kp J      &kp K      &kp L    &kp SQT
+&to 5  &kp Z  &kp X  &kp C  &kp V           &kp B    &kp N  &kp M      &kp COMMA  &kp DOT  &kp SLASH  &none
+                     &mo 1  &kp LEFT_SHIFT  &mo 4    &mo 2  &kp SPACE  &mo 3
             >;
         };
-
-        // Symbol layer. First row has brackets and comparison operators
-        // Home row has shift, alt, gui, ctrl, equal, tilde, and scroll up/down (a little nav spillover)
-        // Central columns have &, @, =, ~, = and ^
-        // Bottom row has tab, hash, pipe, star, minus, plus, caret, backslash, dollar, exclamaion, percent, grave
-        Sym {
-            label = "Sym";
-            bindings = <
-                          &kp LT     &kp LBKT  &kp LBRC  &kp LPAR   &kp AMPS         &kp AT     &kp  RPAR      &kp  RBRC    &kp RBKT  &kp GT
-                          &sk LSHFT  &sk LALT  &sk LGUI  &sk LCTRL  &kp EQUAL        &kp TILDE  &msc SCRL_DOWN &msc SCRL_UP &none     &none
-            &kp LG(Z)     &kp HASH   &kp PIPE  &kp STAR  &kp MINUS  &kp PLUS         &kp CARET  &kp  BSLH      &kp  DLLR    &kp EXCL  &kp PRCNT  &kp GRAVE
-                                               &kp DEL   &none      &none            &kp SPACE  &mo  Nav       &kp  LG(RET)
-            >;
-        };
-
-        // Navigation layer. Arrow keys on home row, mouse movement and clicking/scrolling on the left hand
-        // Underscore lives here to be shiftable from the symbol layer
-        // Extra modifiers on the top right row, and number pad on the bottom row
 
         Nav {
-            label = "Nav";
             bindings = <
-                    &kp LSHFT      &mkp RCLK      &mmv MOVE_UP   &mkp LCLK       &none                &kp DEL  &sk RCTRL  &sk RGUI  &sk RALT   &sk RSHFT
-                    &msc SCRL_LEFT &mmv MOVE_LEFT &mmv MOVE_DOWN &mmv MOVE_RIGHT &msc SCRL_RIGHT      &kp LEFT &kp DOWN   &kp UP    &kp RIGHT  &kp UNDER
-            &kp TAB &kp N1         &kp N2         &kp N3         &kp N4          &kp N5               &kp N6   &kp N7     &kp N8    &kp N9     &kp N0     &kp MINUS
-                                                  &kp RGUI       &mo Sym         &kp RALT             &none    &none      &none
+       &kp ESC       &mkp MB4   &kp LG(F)       &mkp MB5        &kp INSERT    &kp PAGE_UP    &kp HOME   &kp UP      &kp END    &kp CAPS
+       &sk LEFT_ALT  &sk LCTRL  &sk LEFT_SHIFT  &sk LEFT_GUI    &mkp MCLK     &kp BACKSPACE  &kp LEFT   &kp DOWN    &kp RIGHT  &kp DELETE
+&none  &kp LG(Z)     &kp LG(X)  &kp LG(C)       &kp LG(V)       &kp LG(Y)     &kp PAGE_DOWN  &kp ENTER  &kp C_MENU  &kp TAB    &kp PRINTSCREEN  &none
+                                &mo 1           &kp LEFT_SHIFT  &none         &none          &kp ENTER  &none
+            >;
+
+            label = "Nav";
+        };
+
+        Symbol {
+            bindings = <
+       &kp LS(EXCL)  &kp LS(AT)        &kp LS(POUND)   &kp LS(DLLR)  &kp LS(PRCNT)    &kp LS(CARET)  &kp LS(AMPS)  &kp LS(STAR)  &kp GRAVE  &kp LS(TILDE)
+       &sk LEFT_ALT  &sk LEFT_CONTROL  &sk LEFT_SHIFT  &sk LEFT_GUI  &kp MINUS        &kp LS(UNDER)  &kp LS(LPAR)  &kp LS(LBRC)  &kp LBKT   &kp LS(COLON)
+&none  &kp LS(PLUS)  &kp EQUAL         &kp BSLH        &kp LS(PIPE)  &none            &kp SEMI       &kp LS(RPAR)  &kp LS(RBRC)  &kp RBKT   &none          &none
+                                       &none           &none         &none            &mo 2          &none         &none
+            >;
+
+            label = "Symbol";
+        };
+
+        Function {
+            bindings = <
+       &none         &kp C_PREV  &kp C_PLAY_PAUSE  &kp C_NEXT    &kp C_VOLUME_UP      &kp F12  &kp F7  &kp F8  &kp F9  &kp SCROLLLOCK
+       &sk LEFT_ALT  &sk LCTRL   &sk LEFT_SHIFT    &sk LEFT_GUI  &kp RG(LS(S))        &kp F11  &kp F4  &kp F5  &kp F6  &none
+&none  &none         &none       &none             &none         &kp C_VOLUME_DOWN    &kp F10  &kp F1  &kp F2  &kp F3  &none           &none
+                                 &none             &none         &none                &none    &none   &none
+            >;
+
+            label = "Function";
+        };
+
+        Number {
+            bindings = <
+       &none         &none             &none           &none           &kp KP_NUMLOCK    &kp EQUAL        &kp KP_NUMBER_7  &kp KP_NUMBER_8  &kp KP_NUMBER_9  &kp KP_PLUS
+       &sk LEFT_ALT  &sk LEFT_CONTROL  &sk LEFT_SHIFT  &sk LEFT_GUI    &none             &kp KP_ASTERISK  &kp KP_NUMBER_4  &kp KP_NUMBER_5  &kp KP_NUMBER_6  &kp KP_MINUS
+&none  &none         &none             &none           &none           &kp KP_ENTER      &kp KP_DOT       &kp KP_NUMBER_1  &kp KP_NUMBER_2  &kp KP_NUMBER_3  &kp KP_DIVIDE  &none
+                                       &none           &kp LEFT_SHIFT  &mo 4             &none            &kp SPACE        &kp KP_NUMBER_0
+            >;
+
+            label = "Number";
+        };
+
+        KeyboardFunc {
+            bindings = <
+       &bt BT_SEL 0    &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4    &none  &none  &none  &none  &none
+       &to 0           &to 6         &none         &none         &none           &none  &none  &none  &none  &none
+&none  &studio_unlock  &soft_off     &none         &none         &none           &none  &none  &none  &none  &none  &none
+                                     &none         &none         &none           &none  &none  &none
+            >;
+
+            label = "KeyboardFunc";
+        };
+
+        Gaming {
+            label = "Gaming";
+            bindings = <
+       &kp TAB    &kp Q  &kp W  &kp E      &kp R    &none  &none  &none  &none  &none
+       &kp LSHFT  &kp A  &kp S  &kp D      &kp F    &none  &none  &none  &none  &none
+&to 5  &kp CAPS   &kp Z  &kp X  &kp C      &kp V    &none  &none  &none  &none  &none  &none
+                         &none  &kp SPACE  &mo 7    &none  &none  &none
             >;
         };
 
-        // Adjust layer. Activated when both Symbol and Navigation layers are active
-        // Should have media controls on the top row and Bluetooth/power controls on the left
-
-        Adjust {
-            label = "Adjust";
+        Gaming2 {
             bindings = <
-                      &bt BT_SEL 0  &bt BT_SEL 1   &bt BT_SEL 2  &kp C_AC_DESKTOP_SHOW_ALL_WINDOWS &kp C_AC_DESKTOP_SHOW_ALL_APPLICATIONS        &kp C_PP  &kp C_VOL_DN    &kp C_VOL_UP  &kp C_MUTE      &kp C_NEXT
-                      &bt BT_CLR    &studio_unlock &none         &none                             &caps_word                                    &kp HOME  &kp PG_DN       &kp PG_UP     &kp END         &kp INS
-            &kp F12   &kp F1        &kp F2         &kp F3        &kp F4                            &kp F5                                        &kp F6    &kp F7          &kp F8        &kp F9          &kp F10     &kp F11
-                                                   &none         &none                             &none                                         &none     &none           &none
+       &kp T  &kp Y  &kp U  &kp I      &kp O      &none  &none  &none  &none  &none
+       &kp G  &kp H  &kp J  &kp K      &kp L      &none  &none  &none  &none  &none
+&none  &kp B  &kp N  &kp M  &kp COMMA  &kp DOT    &none  &none  &none  &none  &none  &none
+                     &none  &none      &mo 7      &none  &none  &none
             >;
+
+            label = "Gaming2";
         };
     };
 };
